@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>華語樂壇歌手投票</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .choice {
+            display: inline-block;
+            padding: 20px 40px;
+            margin: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            border: 2px solid #333;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .choice:hover {
+            background-color: #ddd;
+        }
+
+        .searchbox {
+            padding: 10px 60px;
+            text-align: left;
+            border: 2px solid #333;
+            font-size: 15px;
+        }
+        
+        .inputbutton {
+            padding: 10px 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .rank-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 20px;
+        }
+
+        .rank-item {
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .rank-item img {
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            border: 2px solid #333;
+        }
+
+        #final-results {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>華語樂壇歌手投票</h1>
+        <div id="setup" class="hidden">
+            <label for="searchbox">請輸入參與投票的歌手數：</label>
+            <input id="searchbox" class="searchbox" type="number" min="4" max="220" placeholder="請輸入數字">
+            <button id="inputbutton" onclick="startvoting()">開始投票</button>
+        </div>
+        <div id="voting">
+            <p id="round-info">第 1 輪</p>
+            <p id="text">選擇你最喜歡的歌手！</p>
+            <div id="question">
+                <div class="choice" onclick="choose(0)">
+                    <img id="img1" src="" alt="歌手圖片" width="150">
+                    <p id="name1">🎤 選項 A</p>
+                </div>
+                <div class="choice" onclick="choose(1)">
+                    <img id="img2" src="" alt="歌手圖片" width="150">
+                    <p id="name2">🎤 選項 B</p>
+                </div>
+            </div>
+            <p id="result" class="hidden"></p>
+            <button id="next" class="hidden" onclick="nextRound()">下一輪</button>
+        </div>
+        <div id="final-results-4" class="hidden">
+            <h2>最終排名</h2>
+            <div class="rank-row">
+                <div class="rank-item">🏆 冠軍: <br><img id="1-img" src="" alt="冠軍圖片"><br><span
+                        id="1"></span></div>
+                <div class="rank-item">🥈 亞軍: <br><img id="2-img" src="" alt="亞軍圖片"><br><span
+                        id="2"></span></div>
+                <div class="rank-item">🥉 季軍: <br><img id="3-img" src="" alt="季軍圖片"><br><span
+                        id="3"></span></div>
+                <div class="rank-item">🏅 殿軍: <br><img id="4-img" src="" alt="殿軍圖片"><br><span
+                        id="4"></span></div>
+            </div>
+        </div>
+        <div id="final-results-8" class="hidden">
+            <div class="rank-row">
+                <div class="rank-item">第 5 名: <br><img id="5-img" src="" alt="第5名圖片"><br><span
+                        id="5"></span></div>
+                <div class="rank-item">第 6 名: <br><img id="6-img" src="" alt="第6名圖片"><br><span
+                        id="6"></span></div>
+                <div class="rank-item">第 7 名: <br><img id="7-img" src="" alt="第7名圖片"><br><span
+                        id="7"></span></div>
+                <div class="rank-item">第 8 名: <br><img id="8-img" src="" alt="第8名圖片"><br><span
+                        id="8"></span></div>
+            </div>
+        </div>
+        <div id="final-results-16" class="hidden">
+            <div class="rank-row">
+                <div class="rank-item">第 9 名: <br><img id="9-img" src="" alt="第9名圖片"><br><span
+                        id="9"></span></div>
+                <div class="rank-item">第 10 名: <br><img id="10-img" src="" alt="第10名圖片"><br><span
+                        id="10"></span></div>
+                <div class="rank-item">第 11 名: <br><img id="11-img" src="" alt="第11名圖片"><br><span
+                        id="11"></span></div>
+                <div class="rank-item">第 12 名: <br><img id="12-img" src="" alt="第12名圖片"><br><span
+                        id="12"></span></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-item">第 13 名: <br><img id="13-img" src="" alt="第13名圖片"><br><span
+                        id="13"></span></div>
+                <div class="rank-item">第 14 名: <br><img id="14-img" src="" alt="第14名圖片"><br><span
+                        id="14"></span></div>
+                <div class="rank-item">第 15 名: <br><img id="15-img" src="" alt="第15名圖片"><br><span
+                        id="15"></span></div>
+                <div class="rank-item">第 16 名: <br><img id="16-img" src="" alt="第16名圖片"><br><span
+                        id="16"></span></div>
+            </div>
+        </div>
+        <div id="final-results-32" class="hidden">
+            <div class="rank-row">
+                <div class="rank-item">第 17 名: <br><img id="17-img" src="" alt="第17名圖片"><br><span
+                        id="17"></span></div>
+                <div class="rank-item">第 18 名: <br><img id="18-img" src="" alt="第18名圖片"><br><span
+                        id="18"></span></div>
+                <div class="rank-item">第 19 名: <br><img id="19-img" src="" alt="第19名圖片"><br><span
+                        id="19"></span></div>
+                <div class="rank-item">第 20 名: <br><img id="20-img" src="" alt="第20名圖片"><br><span
+                        id="20"></span></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-item">第 21 名: <br><img id="21-img" src="" alt="第21名圖片"><br><span
+                        id="21"></span></div>
+                <div class="rank-item">第 22 名: <br><img id="22-img" src="" alt="第22名圖片"><br><span
+                        id="22"></span></div>
+                <div class="rank-item">第 23 名: <br><img id="23-img" src="" alt="第23名圖片"><br><span
+                        id="23"></span></div>
+                <div class="rank-item">第 24 名: <br><img id="24-img" src="" alt="第24名圖片"><br><span
+                        id="24"></span></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-item">第 25 名: <br><img id="25-img" src="" alt="第25名圖片"><br><span
+                        id="25"></span></div>
+                <div class="rank-item">第 26 名: <br><img id="26-img" src="" alt="第26名圖片"><br><span
+                        id="26"></span></div>
+                <div class="rank-item">第 27 名: <br><img id="27-img" src="" alt="第27名圖片"><br><span
+                        id="27"></span></div>
+                <div class="rank-item">第 28 名: <br><img id="28-img" src="" alt="第28名圖片"><br><span
+                        id="28"></span></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-item">第 29 名: <br><img id="29-img" src="" alt="第29名圖片"><br><span
+                        id="29"></span></div>
+                <div class="rank-item">第 30 名: <br><img id="30-img" src="" alt="第30名圖片"><br><span
+                        id="30"></span></div>
+                <div class="rank-item">第 31 名: <br><img id="31-img" src="" alt="第31名圖片"><br><span
+                        id="31"></span></div>
+                <div class="rank-item">第 32 名: <br><img id="32-img" src="" alt="第32名圖片"><br><span
+                        id="32"></span></div>
+            </div>
+        </div>
+        <div id="final-results-64" class="hidden">
+            <div class="rank-row">
+                <div class="rank-item">第 33 名: <br><img id="33-img" src="" alt="第33名圖片"><br><span
+                        id="33"></span></div>
+                <div class="rank-item">第 34 名: <br><img id="34-img" src="" alt="第34名圖片"><br><span
+                        id="34"></span></div>
+                <div class="rank-item">第 35 名: <br><img id="35-img" src="" alt="第35名圖片"><br><span
+                        id="35"></span></div>
+                <div class="rank-item">第 36 名: <br><img id="36-img" src="" alt="第36名圖片"><br><span
+                        id="36"></span></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-item">第 37 名: <br><img id="37-img" src="" alt="第37名圖片"><br><span
+                        id="37"></span></div>
+                <div class="rank-item">第 38 名: <br><img id="38-img" src="" alt="第38名圖片"><br><span
+                        id="38"></span></div>
+                <div class="rank-item">第 39 名: <br><img id="39-img" src="" alt="第39名圖片"><br><span
+                        id="39"></span></div>
+                <div class="rank-item">第 40 名: <br><img id="40-img" src="" alt="第40名圖片"><br><span
+                        id="40"></span></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-item">第 41 名: <br><img id="41-img" src="" alt="第41名圖片"><br><span
+                        id="41"></span></div>
+                <div class="rank-item">第 42 名: <br><img id="42-img" src="" alt="第42名圖片"><br><span
+                        id="42"></span></div>
+                <div class="rank-item">第 43 名: <br><img id="43-img" src="" alt="第43名圖片"><br><span
+                        id="43"></span></div>
+                <div class="rank-item">第 44 名: <br><img id="44-img" src="" alt="第44名圖片"><br><span
+                        id="44"></span></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-item">第 45 名: <br><img id="45-img" src="" alt="第45名圖片"><br><span
+                        id="45"></span></div>
+                <div class="rank-item">第 46 名: <br><img id="46-img" src="" alt="第46名圖片"><br><span
+                        id="46"></span></div>
+                <div class="rank-item">第 47 名: <br><img id="47-img" src="" alt="第47名圖片"><br><span
+                        id="47"></span></div>
+                <div class="rank-item">第 48 名: <br><img id="48-img" src="" alt="第48名圖片"><br><span
+                        id="48"></span></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-item">第 49 名: <br><img id="49-img" src="" alt="第49名圖片"><br><span
+                        id="49"></span></div>
+                <div class="rank-item">第 50 名: <br><img id="50-img" src="" alt="第50名圖片"><br><span
+                        id="50"></span></div>
+                <div class="rank-item">第 51 名: <br><img id="51-img" src="" alt="第51名圖片"><br><span
+                        id="51"></span></div>
+                <div class="rank-item">第 52 名: <br><img id="52-img" src="" alt="第52名圖片"><br><span
+                        id="52"></span></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-item">第 53 名: <br><img id="53-img" src="" alt="第53名圖片"><br><span
+                        id="53"></span></div>
+                <div class="rank-item">第 54 名: <br><img id="54-img" src="" alt="第54名圖片"><br><span
+                        id="54"></span></div>
+                <div class="rank-item">第 55 名: <br><img id="55-img" src="" alt="第55名圖片"><br><span
+                        id="55"></span></div>
+                <div class="rank-item">第 56 名: <br><img id="56-img" src="" alt="第56名圖片"><br><span
+                        id="56"></span></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-item">第 57 名: <br><img id="57-img" src="" alt="第57名圖片"><br><span
+                        id="57"></span></div>
+                <div class="rank-item">第 58 名: <br><img id="58-img" src="" alt="第58名圖片"><br><span
+                        id="58"></span></div>
+                <div class="rank-item">第 59 名: <br><img id="59-img" src="" alt="第59名圖片"><br><span
+                        id="59"></span></div>
+                <div class="rank-item">第 50 名: <br><img id="60-img" src="" alt="第60名圖片"><br><span
+                        id="60"></span></div>
+            </div>
+            <div class="rank-row">
+                <div class="rank-item">第 61 名: <br><img id="61-img" src="" alt="第61名圖片"><br><span
+                        id="61"></span></div>
+                <div class="rank-item">第 62 名: <br><img id="62-img" src="" alt="第62名圖片"><br><span
+                        id="62"></span></div>
+                <div class="rank-item">第 63 名: <br><img id="63-img" src="" alt="第63名圖片"><br><span
+                        id="63"></span></div>
+                <div class="rank-item">第 64 名: <br><img id="64-img" src="" alt="第64名圖片"><br><span
+                        id="64"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let singers = ["周杰倫", "林俊傑", "王力宏", "鄧紫棋", "張惠妹", "孫燕姿", "陳奕迅", "李榮浩", "張學友", "劉德華",
+            "蔡依林", "楊丞琳", "薛之謙", "陶喆", "王菲", "王心凌", "陳綺貞", "盧廣仲", "光良", "品冠",
+            "范瑋琪", "楊宗緯", "蔡健雅", "蘇打綠", "五月天", "李克勤", "梁靜茹", "方大同", "張韶涵", "戴佩妮",
+            "韋禮安", "吳青峰", "王傑", "動力火車", "八三夭", "宋念宇", "小虎隊", "方烱彬", "毛不易", "兄弟本色", "田馥甄",
+            "白安", "任賢齊", "伍佰", "伍思凱", "安心亞", "江蕙", "艾怡良", "艾薇", "吳克群", "吳卓源", "吳宗憲",
+            "告五人", "李友廷", "李玖哲", "李佳薇", "李宗盛", "李玟", "李聖傑", "杜德偉", "汪峰", "汪蘇瀧", "玖壹壹",
+            "辛曉琪", "那英", "卓文萱", "卓義峰", "周湯豪", "周華健", "阿杜", "A-Lin", "周傳雄", "周興哲", "周蕙",
+            "怕胖團", "林志炫", "林芯儀", "林宥嘉", "林憶蓮", "邰正宵", "邱鋒澤", "阿桑", "信樂團", "南拳媽媽", "美秀集團",
+            "好樂團", "胡彥斌", "范逸臣", "茄子蛋", "郁可唯", "飛兒樂團", "飛輪海", "倪安東", "孫盛希", "丁噹", "家家",
+            "容祖兒", "徐佳瑩", "徐若瑄", "神木與瞳", "翁立友", "草東沒有派對", "逃跑計劃", "高爾宣", "婁峻碩", "庾澄慶",
+            "張宇", "張杰", "張雨生", "張信哲", "張國榮", "張棟樑", "張碧晨", "張震嶽", "張靚穎", "曹格", "梁文音", "理想混蛋",
+            "陳零九", "畢書盡", "莊心妍", "莫文蔚", "許美靜", "郭富城", "郭靜", "陳小春", "陳芳語", "陳淑樺", "陳勢安",
+            "彭佳慧", "曾沛慈", "棉花糖", "趙傳", "温嵐", "費玉清", "黃乙玲", "黃小琥", "黃明志", "黃品源", "黃鴻升", "金玟岐",
+            "楊乃文", "滅火器", "萬芳", "熊天平", "齊秦", "劉若英", "潘瑋柏", "潘美辰", "蕭亞軒", "蕭敬騰", "蕭煌奇",
+            "閻奕格", "戴愛玲", "謝和弦", "藍又時", "魏如萱", "羅大佑", "羅志祥", "譚詠麟", "嚴爵", "By2", "Energy",
+            "F4", "HUSH", "J.Sheon", "MP魔幻力量", "5566", "S.H.E", "Trash", "黃宣", "周深", "潘越雲", "朴樹", "陳忻玥",
+            "于文文", "小男孩樂團", "文慧如", "曲婉婷", "老王樂隊", "老破麻", "乱彈阿翔", "吳汶芳", "巫啟賢", "屁孩", "熊仔",
+            "MC HotDog熱狗", "李千娜", "李心潔", "李玉剛", "李杰明", "李芷婷", "李浩瑋", "派偉俊", "李健", "李翊君", "周思涵",
+            "娃娃", "范曉萱", "徐懷鈺", "草蜢", "張芸京", "張智成", "梁詠琪", "莫宰羊", "陳雷", "童安格", "黃大煒", "楊培安",
+            "鳳凰傳奇", "瘦子E.SO", "鄧麗君", "謝霆鋒", "韓紅", "麋先生", "hue", "王嘉爾", "Marz23", "呂建忠", "持修"];
+
+        let currentRound = [];
+        let nextRound = [];
+        let selectedSingers = [];
+        let roundNumber = 1;
+        let semiFinalWinners = [];
+        let semiFinalLosers = [];
+        let quarterFinal = [];
+        let oneEighthFinal = [];
+        let oneSixteenthFinal = [];
+        let oneThirtySecondFinal = [];
+        let finalMatch = [];
+        let rankings = [];
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        shuffle(singers);
+
+        /*function startvoting() {
+            var num = parseInt(document.getElementById('searchbox').value.trim(), 10);
+            console.log("轉換後的數字:", num);
+            if (isNaN(num) || num < 4 || num > singers.length) {
+                alert(`請輸入 4 到 ${singers.length} 之間的數字！`);
+                return;
+            }
+            console.log("選擇的歌手數量:", num);
+            selectedSingers = singers.slice(0, num);
+            document.getElementById('setup').classList.add('hidden');
+            document.getElementById('voting').classList.remove('hidden');
+        }*/
+        selectedSingers = [...singers];
+
+        function pick(array) {
+            let total = array.length;
+            let nearestPower = Math.pow(2, Math.floor(Math.log2(total)));
+            if (total === nearestPower) {
+                currentRound = [...array];
+            }
+            else {
+                let extra = total - nearestPower;
+                currentRound = array.slice(0, extra * 2);
+                nextRound = array.slice(extra * 2);
+            }
+        }
+
+        if (roundNumber === 1) {
+            pick(selectedSingers);
+        }
+        let votes = currentRound.length / 2;
+
+        function setImage(imgId, singerName) {
+            let imgElement = document.getElementById(imgId);
+            imgElement.src = `images/${singerName}.jpg`;
+            imgElement.onerror = function () {
+                this.src = "images/default.jpg";
+            };
+        }
+
+        function updateChoices(vote) {
+            if (currentRound.length === 1) {
+                document.getElementById('question').classList.add('hidden');
+                document.getElementById('round-info').classList.add('hidden');
+                document.getElementById('text').classList.add('hidden');
+                if (selectedSingers.length >= 4) {
+                    document.getElementById('final-results-4').style.display = 'block';
+                }
+                if (selectedSingers.length >= 8) {
+                    document.getElementById('final-results-8').style.display = 'block';
+                }
+                if (selectedSingers.length >= 16) {
+                    document.getElementById('final-results-16').style.display = 'block';
+                }
+                if (selectedSingers.length >= 32) {
+                    document.getElementById('final-results-32').style.display = 'block';
+                }
+                if (selectedSingers.length >= 64) {
+                    document.getElementById('final-results-64').style.display = 'block';
+                }
+                let nums = [];
+                for (let i = 1; i <= 64; i++) {
+                    nums.push(`${i}`);
+                }
+                nums.forEach((value, index) => {
+                    document.getElementById(value).innerText = rankings[index];
+                    setImage(`${value}-img`, rankings[index]);
+                })
+                return;
+            }
+            document.getElementById('round-info').innerText = `第 ${roundNumber} 輪（ ${currentRound.length / 2} / ${vote} ）`;
+            document.getElementById('name1').innerText = "🎤 " + currentRound[0];
+            document.getElementById('name2').innerText = "🎤 " + currentRound[1];
+            document.getElementById('img1').src = `images/${currentRound[0]}.jpg`;
+            document.getElementById('img2').src = `images/${currentRound[1]}.jpg`;
+            document.getElementById('img1').onerror = function () {
+                this.src = "images/default.jpg";
+            };
+            document.getElementById('img2').onerror = function () {
+                this.src = "images/default.jpg";
+            };
+        }
+
+        function choose(winnerIndex) {
+            let winner = currentRound[winnerIndex];
+            let loser = currentRound[winnerIndex === 0 ? 1 : 0];
+            if (votes === 32) {
+                oneThirtySecondFinal.push(winner);
+                oneThirtySecondFinal.push(loser);
+            }
+            if (votes === 16) {
+                oneSixteenthFinal.push(winner);
+                oneSixteenthFinal.push(loser);
+            }
+            if (votes === 8) {
+                oneEighthFinal.push(winner);
+                oneEighthFinal.push(loser);
+            }
+            if (votes === 4) {
+                quarterFinal.push(winner);
+                quarterFinal.push(loser);
+            }
+            if (votes === 2) {
+                semiFinalWinners.push(winner);
+                semiFinalLosers.push(loser);
+            }
+            if (votes === 1) {
+                rankings[0] = winner;
+                rankings[1] = loser;
+                if (semiFinalWinners[0] === rankings[0]) {
+                    rankings[2] = semiFinalLosers[0];
+                    rankings[3] = semiFinalLosers[1];
+                }
+                else {
+                    rankings[2] = semiFinalLosers[1];
+                    rankings[3] = semiFinalLosers[0];
+                }
+                for (let i = 0; i < 8; i += 2) {
+                    for (let j = 0; j < 4; j++) {
+                        if (rankings[j] === quarterFinal[i]) {
+                            rankings[j + 4] = quarterFinal[i + 1];
+                        }
+                    }
+                }
+                for (let i = 0; i < 16; i += 2) {
+                    for (let j = 0; j < 8; j++) {
+                        if (rankings[j] === oneEighthFinal[i]) {
+                            rankings[j + 8] = oneEighthFinal[i + 1];
+                        }
+                    }
+                }
+                for (let i = 0; i < 32; i += 2) {
+                    for (let j = 0; j < 16; j++) {
+                        if (rankings[j] === oneSixteenthFinal[i]) {
+                            rankings[j + 16] = oneSixteenthFinal[i + 1];
+                        }
+                    }
+                }
+                for (let i = 0; i < 64; i += 2) {
+                    for (let j = 0; j < 32; j++) {
+                        if (rankings[j] === oneThirtySecondFinal[i]) {
+                            rankings[j + 32] = oneThirtySecondFinal[i + 1];
+                        }
+                    }
+                }
+            }
+            currentRound.splice(0, 2);
+            nextRound.push(winner);
+            if (currentRound.length === 0) {
+                currentRound = [...nextRound];
+                nextRound = [];
+                if (currentRound.length != 2) {
+                    shuffle(currentRound);
+                }
+                roundNumber++;
+                votes = currentRound.length / 2;
+            }
+            updateChoices(votes);
+        }
+        updateChoices(votes);
+    </script>
+</body>
+</html>
